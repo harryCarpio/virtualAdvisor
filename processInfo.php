@@ -18,6 +18,7 @@
         foreach($materiasPorProfesor as $materiaPorProfesor){
             $codMateriaLocal = $materiaPorProfesor->COD_MATERIA_ACAD;
             if( strcmp($codMateriaLocal,$codMateria)==0){ 
+                $identif_prof = $materiaPorProfesor->IDENTIF_PROF;
                 echo "
                 <tr>
                     <td>$materiaDisp->COD_MATERIA_ACAD</td>
@@ -26,7 +27,7 @@
                     <td> $materiaPorProfesor->DOCENTE</td>
                     <td>$materiaDisp->NUMCREDITOS</td>
                     <td>$materiaDisp->TIPOCREDITO</td>
-                    <td>".difficultIndicator($materiaDisp->NUMCREDITOS, $materiaDisp->COD_MATERIA_ACAD)."</td>
+                    <td>".difficultIndicator($materiaDisp->NUMCREDITOS, $codMateria, $identif_prof)."</td>
                 </tr>";
             }
         }

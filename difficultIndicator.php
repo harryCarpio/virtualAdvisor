@@ -5,7 +5,7 @@
  * Intervalo Valores : [0-100]
  */
 
-function difficultIndicator($num_creditos,$cod_materia){
+function difficultIndicator($num_creditos,$cod_materia, $identif_prof){
     /*
      * DEFINIR PESOS A CADA VARIABLE, SUMADOS DEBE DAR 100
      */
