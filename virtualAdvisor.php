@@ -7,28 +7,10 @@ and open the template in the editor.
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title></title>
-    </head>
-    <body>
         <?php
         $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
         $matricula = $_POST["matriculaIn"];
 
-//        try {
-//            $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
-//            $client = new SOAPClient($wsdl_url);
-//            $params = array(
-//                'matricula' => "$matricula"
-//            );
-//            $return = $client->MateriasMallaAprobadas($params);
-//            var_dump($return->MateriasMallaAprobadasResult->any);
-//            $xml = simplexml_load_string($return->MateriasMallaAprobadasResult->any);
-//            $aprobadasArray=$xml->NewDataSet->V_MATERIAS_ACREDITADAS;
-//            $numeroAprobadas = $aprobadasArray->count();
-//            echo "Materias Aprobadas: ".$numeroAprobadas;
-//            
-//        } catch (Exception $e) {
-//            echo "Exception occured: " . $e;
-//        }
        
        /*******************************************************************
         *      OBTENER INFORMACION GENERAL DESDE LA MATRICULA INGRESADA   *
@@ -128,29 +110,129 @@ and open the template in the editor.
             }
 //            $xml = simplexml_load_string($return->CreditosEstudianteResult->Resumen);
             
-            echo "Creditos Optativa Excendente: ".$creditoOptativo['Excedente'];
-            echo "<br/>";
-            echo "Creditos Libre Opcion Excendente: ".$creditoLibreOpcion['Excedente'];
-            echo "<br/>";
-            echo "Creditos Basico Excendente: ".$creditoFormacionBasica['Excedente'];
-            echo "<br/>";
-            echo "Creditos Profesional Excendente: ".$creditoFormacionProfesional['Excedente'];
-            echo "<br/>";
-            echo "Creditos Humana Excendente: ".$creditoHumana['Excedente'];
-            echo "<br/>";
-            echo "Creditos Electiva Humana Excendente: ".$creditoElectivaHumana['Excedente'];
-//            var_dump($xml);
-            
-        
-//           $aprobadasArray=$xml->NewDataSet->V_MATERIAS_ACREDITADAS;
-//            $numeroAprobadas = $aprobadasArray->count();
-//            echo "Materias Aprobadas: ".$numeroAprobadas;
+//            echo "Creditos Optativa Excendente: ".$creditoOptativo['Excedente'];
+//            echo "<br/>";
+//            echo "Creditos Libre Opcion Excendente: ".$creditoLibreOpcion['Excedente'];
+//            echo "<br/>";
+//            echo "Creditos Basico Excendente: ".$creditoFormacionBasica['Excedente'];
+//            echo "<br/>";
+//            echo "Creditos Profesional Excendente: ".$creditoFormacionProfesional['Excedente'];
+//            echo "<br/>";
+//            echo "Creditos Humana Excendente: ".$creditoHumana['Excedente'];
+//            echo "<br/>";
+//            echo "Creditos Electiva Humana Excendente: ".$creditoElectivaHumana['Excedente'];
             
         } catch (Exception $e) {
             echo "Exception occured: " . $e;
         }
        
+        
+        
+        
+        
+        try {
+            $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
+            $client = new SOAPClient($wsdl_url);
+            $params = array(
+                'matricula' => "$matricula"
+            );
+            $return = $client->MateriasDisponiblesEstudianteActivas($params);
+            $xml = simplexml_load_string($return->MateriasDisponiblesEstudianteActivasResult->any);
+
+            $materiasDisponibles = array();
+            
+            foreach($xml->NewDataSet->V_MATERIAS_DISPONIBLES as $materiaDisponible){
+                array_push($materiasDisponibles, $materiaDisponible);
+            }
+//            var_dump($materiasDisponibles);
+            
+        } catch (Exception $e) {
+            echo "Exception occured: " . $e;
+        }
+        
+        try {
+            $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
+            $client = new SOAPClient($wsdl_url);
+            $params = array(
+                'matricula' => "$matricula"
+            );
+            $return = $client->MateriasPorTomarEstudiante($params);
+//            var_dump($return->MateriasPorTomarEstudianteResult);
+            
+            $xml = simplexml_load_string($return->MateriasPorTomarEstudianteResult->any);
+
+            
+            $materiasPorTomar = array();
+            foreach ($xml->NewDataSet->V_MATERIAS_X_TOMAR as $materiaPorTomar){
+                array_push($materiasPorTomar, $materiaPorTomar);
+            }
+            $materiasPorProfesor = array();
+            foreach ($xml->NewDataSet->V_MATERIAS_X_PROFESOR as $materiaPorProfesor){
+                array_push($materiasPorProfesor, $materiaPorProfesor);
+            }
+            $materiasHorarioClases = array();
+            foreach ($xml->NewDataSet->V_HORARIO_CLASES as $materiaHorarioClases){
+                array_push($materiasHorarioClases, $materiaHorarioClases);
+            }
+            
+//            var_dump($materiasPorTomar);
+//            var_dump($materiasPorProfesor);
+//            var_dump($materiasHorarioClases);
+        } catch (Exception $e) {
+            echo "Exception occured: " . $e;
+        }
        
         ?>
+    </head>
+    <body>
+        <h4>Bienvenido <?php echo $nombres_student." ".$apellidos_student?></h4>
+        
+        <table>
+            <thead></thead>
+            <tbody>
+                <tr>
+                    <td>Carrera</td><td>:</td>
+                    <td><?php echo $nombre_carrera?></td>
+                </tr>
+                <tr>
+                    <td>Unidad Academica</td><td>:</td>
+                    <td><?php echo $cod_unidad?></td>
+                </tr>
+                <tr>
+                    <td>Materias Aprobadas</td><td>:</td>
+                    <td><?php echo $num_aprobadas?></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
+        <h5>Materias Disponibles Estudiante</h5>
+        <table>
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Creditos</th>
+                    <th>Tipo Credito</th>
+                    <th>Indicador Dificultad</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    foreach ($materiasDisponibles as $materiaDisp){
+                        echo "
+                        <tr>
+                            <td>$materiaDisp->COD_MATERIA_ACAD</td>
+                            <td>$materiaDisp->NOMBRE_MATERIA</td>
+                            <td>$materiaDisp->NUMCREDITOS</td>
+                            <td>$materiaDisp->TIPOCREDITO</td>
+                            <td>0</td>
+                        </tr>";
+                    }
+                ?>
+            </tbody>
+        </table>
+        
+        
     </body>
 </html>
