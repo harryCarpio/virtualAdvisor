@@ -19,16 +19,21 @@
             $codMateriaLocal = $materiaPorProfesor->COD_MATERIA_ACAD;
             if( strcmp($codMateriaLocal,$codMateria)==0){ 
                 $identif_prof = $materiaPorProfesor->IDENTIF_PROF;
+//                var_dump($identif_prof);
+                $identif_prof=  str_replace(" ", "", $identif_prof);
+                $prof_mark = getTeacherMarker($identif_prof,$codMateria);
                 echo "
                 <tr>
                     <td>$materiaDisp->COD_MATERIA_ACAD</td>
                     <td>$materiaDisp->NOMBRE_MATERIA</td>
-                    <td> $materiaPorProfesor->PARALELO</td>
-                    <td> $materiaPorProfesor->DOCENTE</td>
+                    <td>$materiaPorProfesor->PARALELO</td>
+                    <td>$materiaPorProfesor->DOCENTE - $materiaPorProfesor->IDENTIF_PROF</td>
+                    <td>".$prof_mark."</td>    
                     <td>$materiaDisp->NUMCREDITOS</td>
                     <td>$materiaDisp->TIPOCREDITO</td>
-                    <td>".difficultIndicator($materiaDisp->NUMCREDITOS, $codMateria, $identif_prof)."</td>
+                    <td>".difficultIndicator($materiaDisp->NUMCREDITOS, $codMateria, $identif_prof, $prof_mark)."</td>
                 </tr>";
+                
             }
         }
     }

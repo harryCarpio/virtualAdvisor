@@ -5,7 +5,7 @@
  * Intervalo Valores : [0-100]
  */
 
-function difficultIndicator($num_creditos,$cod_materia, $identif_prof){
+function difficultIndicator($num_creditos,$cod_materia, $identif_prof,$prof_mark){
     /*
      * DEFINIR PESOS A CADA VARIABLE, SUMADOS DEBE DAR 100
      */
@@ -26,7 +26,7 @@ function difficultIndicator($num_creditos,$cod_materia, $identif_prof){
     // ESTAS VARIABLES OBTENERLAS DESDE UNA BASE DE DATOS DEL SISTEMA.
     $syllabus = 0;
     $projects = 0;
-    $teacher_mark = 0;
+    $teacher_mark = (float)(100 - $prof_mark);
     $students_mark = 0;
     $malla_curricular = 0;
     

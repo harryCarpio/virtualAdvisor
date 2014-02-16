@@ -10,6 +10,7 @@ and open the template in the editor.
         <?php
         include "difficultIndicator.php";
         include "processInfo.php";
+        include "cenacadData.php";
         
         $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
         $matricula = $_POST["matriculaIn"];
@@ -230,6 +231,7 @@ and open the template in the editor.
                     <th>Nombre</th>
                     <th>Paralelo</th>
                     <th>Profesor</th>
+                    <th>Nota Profesor</th>
                     <th>Creditos</th>
                     <th>Tipo Credito</th>
                     <th>Indicador Dificultad</th>
