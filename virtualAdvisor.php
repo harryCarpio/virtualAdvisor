@@ -8,12 +8,16 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title></title>
         <?php
+        include "difficultIndicator.php";
+        include "processInfo.php";
+        
         $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
         $matricula = $_POST["matriculaIn"];
 
        
        /*******************************************************************
-        *      OBTENER INFORMACION GENERAL DESDE LA MATRICULA INGRESADA   *
+        *       OBTENER INFORMACION GENERAL DEL ESTUDIANTE
+        *       DESDE LA MATRICULA INGRESADA  
         *******************************************************************/
        
        try {            
@@ -45,7 +49,9 @@ and open the template in the editor.
         }
         
         
-        
+        /******************************************************************
+        *      OBTENER NÚMERO DE CREDITOS CURSADOS Y RESTANTES            *
+        *******************************************************************/
         try {
             $client = new SOAPClient($wsdl_url);
             $params = array(
@@ -127,8 +133,9 @@ and open the template in the editor.
         }
        
         
-        
-        
+        /******************************************************************
+        *      LLENAR ARREGLO CON LAS MATERIAS DISPONIBLES ACTIVAS X EST. *
+        *******************************************************************/        
         
         try {
             $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
@@ -149,6 +156,15 @@ and open the template in the editor.
         } catch (Exception $e) {
             echo "Exception occured: " . $e;
         }
+        
+        
+        /*******************************************************************
+        *      LLENAR ARREGLOS DE:
+        *          - Materias por tomar, CODIGOMATERIA, ej: string 'FIEC05058      ' 
+        *          - Materias por profesor, COD_MATERIA_ACAD ej:  string 'FIEC00075 ' & IDCURSO
+        *          - Horarios de clases y examenes, IDCURSO
+        *******************************************************************/
+        
         
         try {
             $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
@@ -212,6 +228,8 @@ and open the template in the editor.
                 <tr>
                     <th>Codigo</th>
                     <th>Nombre</th>
+                    <th>Paralelo</th>
+                    <th>Profesor</th>
                     <th>Creditos</th>
                     <th>Tipo Credito</th>
                     <th>Indicador Dificultad</th>
@@ -220,14 +238,17 @@ and open the template in the editor.
             <tbody>
                 <?php
                     foreach ($materiasDisponibles as $materiaDisp){
-                        echo "
-                        <tr>
-                            <td>$materiaDisp->COD_MATERIA_ACAD</td>
-                            <td>$materiaDisp->NOMBRE_MATERIA</td>
-                            <td>$materiaDisp->NUMCREDITOS</td>
-                            <td>$materiaDisp->TIPOCREDITO</td>
-                            <td>0</td>
-                        </tr>";
+//                        echo "
+//                        <tr>
+//                            <td>$materiaDisp->COD_MATERIA_ACAD</td>
+//                            <td>$materiaDisp->NOMBRE_MATERIA</td>
+//                            <td>".teacherID($materiasPorProfesor,$materiaDisp->COD_MATERIA_ACAD)."</td>
+//                            <td>$materiaDisp->NUMCREDITOS</td>
+//                            <td>$materiaDisp->TIPOCREDITO</td>
+//                            <td>".difficultIndicator($materiaDisp->NUMCREDITOS, $materiaDisp->COD_MATERIA_ACAD)."</td>
+//                        </tr>";
+                        getCoursesByCodMateria($materiasPorProfesor,$materiaDisp->COD_MATERIA_ACAD, $materiaDisp);
+                        
                     }
                 ?>
             </tbody>
