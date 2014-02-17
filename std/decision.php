@@ -3,6 +3,81 @@
 	if(!isset($_SESSION['datos']))
 		header('Location: index.php');
 	$datos_usuario = $_SESSION['datos'];
+        
+        
+        /******************************************************************
+        *      OBTENER NÚMERO DE CREDITOS CURSADOS Y RESTANTES            *
+        *******************************************************************/
+        $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
+        try {
+            $client = new SOAPClient($wsdl_url);
+            $mat = $datos_usuario['COD_ESTUDIANTE'];
+            $cod_division = $datos_usuario['COD_DIVISION'];
+            $cod_carrera = $datos_usuario['COD_CARRERA'];
+            $cod_especializ = $datos_usuario['COD_ESPECIALIZ'];
+            $params = array(
+                'codigoEstudiante' => "$mat",
+                'codigoDivision' => "$cod_division",
+                'codigoCarrera' => "$cod_carrera",
+                'codigoEspecializacion' => "$cod_especializ"                
+            );
+            $return = $client->CreditosEstudiante($params);
+            $resumenCreditosArray = $return->CreditosEstudianteResult->Resumen->Credito;
+            //echo count($resumenCreditosArray);  
+//            var_dump($resumenCreditosArray);
+            foreach ( $resumenCreditosArray as $credito){
+                if($credito->TipoCredito == "OPTATIVA"){
+                    $creditoOptativo = array(
+                        'Tomados' => $credito->Tomados,
+                        'Flujo' => $credito->Flujo,
+                        'Excedente' => $credito->Excedente,
+                        'IdTipoCredito' => $credito->IdTipoCredito
+                    );
+                }
+                if($credito->TipoCredito == "LIBRE OPCION"){
+                    $creditoLibreOpcion = array(
+                        'Tomados' => $credito->Tomados,
+                        'Flujo' => $credito->Flujo,
+                        'Excedente' => $credito->Excedente,
+                        'IdTipoCredito' => $credito->IdTipoCredito
+                    );
+                }
+                if($credito->TipoCredito == "FORMACIÓN BÁSICA"){
+                    $creditoFormacionBasica = array(
+                        'Tomados' => $credito->Tomados,
+                        'Flujo' => $credito->Flujo,
+                        'Excedente' => $credito->Excedente,
+                        'IdTipoCredito' => $credito->IdTipoCredito
+                    );
+                }
+                if($credito->TipoCredito == "FORMACIÓN PROFESIONAL"){
+                    $creditoFormacionProfesional = array(
+                        'Tomados' => $credito->Tomados,
+                        'Flujo' => $credito->Flujo,
+                        'Excedente' => $credito->Excedente,
+                        'IdTipoCredito' => $credito->IdTipoCredito
+                    );
+                }
+                if($credito->TipoCredito == "FORMACIÓN HUMANA"){
+                    $creditoHumana = array(
+                        'Tomados' => $credito->Tomados,
+                        'Flujo' => $credito->Flujo,
+                        'Excedente' => $credito->Excedente,
+                        'IdTipoCredito' => $credito->IdTipoCredito
+                    );
+                }
+                if($credito->TipoCredito == "ELECTIVA DE FORMACIÓN HUMANA"){
+                    $creditoElectivaHumana = array(
+                        'Tomados' => $credito->Tomados,
+                        'Flujo' => $credito->Flujo,
+                        'Excedente' => $credito->Excedente,
+                        'IdTipoCredito' => $credito->IdTipoCredito
+                    );
+                }
+            }
+        } catch (Exception $e) {
+        echo "Exception occured: " . $e;
+    }
 ?>
 <!doctype html>
 <html>
@@ -14,7 +89,7 @@
 	<!-- Apple devices fullscreen -->
 	<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	
-	<title>FLAT - Decisi&oacute;n</title>
+	<title>VA - Decisi&oacute;n</title>
         <!-- Bootstrap -->
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<!-- Bootstrap responsive -->
@@ -118,6 +193,11 @@
 							<span>Decisi&oacute;n</span>
 						</a>
 					</li>
+                                        <li>
+                                            <a href="calificacion.php">
+                                                    <span>Calificar Cursadas</span>
+                                            </a>
+                                        </li>
 					<li>
 						<a href="perfil.php">
 							<span>Perfil</span>
@@ -173,24 +253,59 @@
 						</div>
 						<div class="pull-right">
 						<ul class="stats">
-							<li class='satgreen' style="display:none;">
+							<li class='satgreen' style="display:block;">
+<!--								<i class="icon-money"></i>-->
+								<div class="details">
+									<span class="big"><?php echo $creditoFormacionProfesional['Tomados']."/".$creditoFormacionProfesional['Flujo'];?></span>
+                                                                        <span>Formaci&oacute;n Profesional</span>
+								</div>
+							</li>
+                                                        <li class='blue' style="display:block;">
+<!--								<i class="icon-money"></i>-->
+								<div class="details">
+									<span class="big"><?php echo $creditoOptativo['Tomados']."/".$creditoOptativo['Flujo'];?></span>
+									<span>Optativas</span>
+								</div>
+							</li>
+                                                        <li class='lightgrey' style="display:block;">
+								<!--<i class="icon-money"></i>-->
+								<div class="details">
+									<span class="big"><?php echo $creditoFormacionBasica['Tomados']."/".$creditoFormacionBasica['Flujo'];?></span>
+									<span>Formaci&oacute;n B&aacute;sica</span>
+								</div>
+							</li>
+                                                        <li class='lightred' style="display:block;">
+								<!--<i class="icon-money"></i>-->
+								<div class="details">
+									<span class="big"><?php echo $creditoHumana['Tomados']."/".$creditoHumana['Flujo'];?></span>
+									<span>Formaci&oacute;n Humana</span>
+								</div>
+							</li>
+                                                        <li class='satblue' style="display:block;">
+								<!--<i class="icon-money"></i>-->
+								<div class="details">
+									<span class="big"><?php echo $creditoLibreOpcion['Tomados']."/".$creditoLibreOpcion['Flujo'];?></span>
+									<span>Libre Opci&oacute;n</span>
+								</div>
+							</li>
+<!--                                                        <li class='satgreen' style="display:block;">
 								<i class="icon-money"></i>
 								<div class="details">
 									<span class="big">$324,12</span>
 									<span>T&eacute;rmino Actual</span>
 								</div>
-							</li>
-							<li class='satgreen'>
+							</li>-->
+<!--							<li class='satgreen'>
 								<i class="icon-calendar"></i>
 								<div class="details">
 									<span class="big">February 22, 2013</span>
 									<span>Wednesday, 13:56</span>
 								</div>
-							</li>
+							</li>-->
 						</ul>
 					</div>
 					</div>
-					<div class="row-fluid">
+<!--					<div class="row-fluid">
 						<div class="span12">
 							<div class="box">
 								<div class="box-title">
@@ -466,14 +581,14 @@
 								</div>
 							</div>
 						</div>
-					</div>
+					</div>-->
 					<div class="row-fluid">
 						<div class="span12">
 							<div class="box box-color box-bordered">
 								<div class="box-title">
 									<h3>
 										<i class="icon-reorder"></i>
-										Resultado
+										Disponibles Valoradas
 									</h3>
 								</div>
 								<div class="box-content" style="display: block;" id="resultado">
@@ -490,7 +605,7 @@
                                                                                 <th>Tipo Credito</th>
                                                                                 <th>Indicador Dificultad</th>
                                                                             </tr>
-<!--                                                                            <tr>
+                                                                            <tr>
                                                                                 <th>Codigo</th>
                                                                                 <th>Nombre</th>
                                                                                 <th>Paralelo</th>
@@ -499,7 +614,7 @@
                                                                                 <th>Creditos</th>
                                                                                 <th>Tipo Credito</th>
                                                                                 <th>Indicador Dificultad</th>
-                                                                            </tr>-->
+                                                                            </tr>
                                                                         </thead>
                                                                         <tbody>
                                                                             <?php
@@ -577,7 +692,7 @@
 		
                 <div id="footer">
 			<p>
-				FLAT - Responsive Admin Template <span class="font-grey-4">|</span> <a href="#">Contact</a> <span class="font-grey-4">|</span> <a href="#">Imprint</a> 
+				VIRTUAL ADVISOR - SISTEMAS DE TOMA DE DECISIONES <span class="font-grey-4">|</span> <a href="#">Contact</a> <span class="font-grey-4">|</span> <a href="#">Imprint</a> 
 			</p>
 			<a href="#" class="gototop"><i class="icon-arrow-up"></i></a>
 		</div>

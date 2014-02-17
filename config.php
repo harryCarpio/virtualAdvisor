@@ -1,11 +1,15 @@
 <?php
 
-    define("DB_HOST",'127.0.0.0');
+    define("DB_HOST",'localhost');
     define("DB_PORT",3306);
-    define("DB_USERNAME",'advisor');
-    define("DB_PASSWORD",'stdstd');
-    define("DB_DBNAME",'VIRTUAL_ADVISOR');
+    define("DB_USERNAME",'root');
+    define("DB_PASSWORD",'root');
+    define("DB_DBNAME",'virtual_advisor');
+
+    $host = DB_HOST;
+    $username = DB_USERNAME;
+    $password = DB_PASSWORD;
     
-    $conn = mysql_connect(DB_HOST, DB_USERNAME, DB_PASSWORD);
+    $conn = mysql_connect($host, $username, $password);
     
 ?>

@@ -20,7 +20,7 @@
 
         $cod_materia = str_replace(" ", "", $cod_materia);
         $query_projects = "SELECT PROYECTOS FROM virtual_advisor.materia WHERE COD_MATERIA like '$cod_materia'";
-
+        $query_students_mark = "SELECT AVG(MARK) FROM virtual_advisor.materia_ranking WHERE COD_MATERIA like '$cod_materia'";
         $res_proj = mysql_query($query_projects);
         if($res_proj){
             if(mysql_num_rows($res_proj)>0)
@@ -31,16 +31,26 @@
         else {
             $projs = 0;
         }
+        $res_students_mark = mysql_query($query_students_mark);
+        if($res_students_mark){
+            if(mysql_num_rows($res_students_mark)>0)
+                $stmarks = mysql_fetch_array($res_students_mark)[0];
+            else 
+                $stmarks = 0;
+        }
+        else {
+            $stmarks = 0;
+        }
         /*
          * SETEAR VALORES A CADA VARIABLE
          */
         $study_hours = 2 * $num_creditos;    
         $class_hours = $num_creditos;
         // ESTAS VARIABLES OBTENERLAS DESDE UNA BASE DE DATOS DEL SISTEMA.
-        $syllabus = 0;
+        $syllabus = 100;
         $projects = $projs;
         $teacher_mark = (float)(100 - $prof_mark);
-        $students_mark = 0;
+        $students_mark = $stmarks;
         $malla_curricular = 0;
 
 

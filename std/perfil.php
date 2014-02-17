@@ -96,6 +96,11 @@
 						<span>Decisi&oacute;n</span>
 					</a>
 				</li>
+                                <li>
+					<a href="calificacion.php">
+						<span>Calificar Cursadas</span>
+					</a>
+				</li>
 				<li class='active'>
 					<a href="perfil.php">
 						<span>Perfil</span>
@@ -306,7 +311,7 @@
 	</div></div>
 	<div id="footer">
 			<p>
-				FLAT - Responsive Admin Template <span class="font-grey-4">|</span> <a href="#">Contact</a> <span class="font-grey-4">|</span> <a href="#">Imprint</a> 
+				VIRTUAL ADVISOR - SISTEMAS DE TOMA DE DECISIONES <span class="font-grey-4">|</span> <a href="#">Contact</a> <span class="font-grey-4">|</span> <a href="#">Imprint</a> 
 			</p>
 			<a href="#" class="gototop"><i class="icon-arrow-up"></i></a>
 		</div>
