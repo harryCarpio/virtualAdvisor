@@ -1,3 +1,9 @@
+<?php 
+	session_start();
+	if(!isset($_SESSION['datos']))
+		header('Location: index.php');
+	$datos_usuario = $_SESSION['datos'];
+?>
 <!doctype html>
 <html>
 <head>
@@ -9,14 +15,21 @@
 	<meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 	
 	<title>FLAT - Decisi&oacute;n</title>
-
-	<!-- Bootstrap -->
+        <!-- Bootstrap -->
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<!-- Bootstrap responsive -->
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
 	<!-- jQuery UI -->
 	<link rel="stylesheet" href="css/plugins/jquery-ui/smoothness/jquery-ui.css">
 	<link rel="stylesheet" href="css/plugins/jquery-ui/smoothness/jquery.ui.theme.css">
+	<!-- PageGuide -->
+	<link rel="stylesheet" href="css/plugins/pageguide/pageguide.css">
+	<!-- chosen -->
+	<link rel="stylesheet" href="css/plugins/chosen/chosen.css">
+	<!-- select2 -->
+	<link rel="stylesheet" href="css/plugins/select2/select2.css">
+	<!-- icheck -->
+	<link rel="stylesheet" href="css/plugins/icheck/all.css">
 	<!-- Theme CSS -->
 	<link rel="stylesheet" href="css/style.css">
 	<!-- Color CSS -->
@@ -26,12 +39,14 @@
 	<!-- jQuery -->
 	<script src="js/jquery.min.js"></script>
 	
+	
 	<!-- Nice Scroll -->
 	<script src="js/plugins/nicescroll/jquery.nicescroll.min.js"></script>
 	<!-- jQuery UI -->
 	<script src="js/plugins/jquery-ui/jquery.ui.core.min.js"></script>
 	<script src="js/plugins/jquery-ui/jquery.ui.widget.min.js"></script>
 	<script src="js/plugins/jquery-ui/jquery.ui.mouse.min.js"></script>
+	<script src="js/plugins/jquery-ui/jquery.ui.draggable.min.js"></script>
 	<script src="js/plugins/jquery-ui/jquery.ui.resizable.min.js"></script>
 	<script src="js/plugins/jquery-ui/jquery.ui.sortable.min.js"></script>
 	<!-- slimScroll -->
@@ -40,22 +55,31 @@
 	<script src="js/bootstrap.min.js"></script>
 	<!-- Bootbox -->
 	<script src="js/plugins/bootbox/jquery.bootbox.js"></script>
-	<!-- Bootbox -->
-	<script src="js/plugins/form/jquery.form.min.js"></script>
-	<!-- Validation -->
-	<script src="js/plugins/validation/jquery.validate.min.js"></script>
-	<script src="js/plugins/validation/additional-methods.min.js"></script>
-	<!-- Form -->
-	<script src="js/plugins/form/jquery.form.min.js"></script>
-	<!-- Wizard -->
-	<script src="js/plugins/wizard/jquery.form.wizard.min.js"></script>
-	<script src="js/plugins/mockjax/jquery.mockjax.js"></script>
+	<!-- dataTables -->
+	<script src="js/plugins/datatable/jquery.dataTables.min.js"></script>
+	<script src="js/plugins/datatable/TableTools.min.js"></script>
+	<script src="js/plugins/datatable/ColReorder.min.js"></script>
+	<script src="js/plugins/datatable/ColVis.min.js"></script>
+	<script src="js/plugins/datatable/jquery.dataTables.columnFilter.js"></script>
+	<!-- Flot -->
+	<script src="js/plugins/flot/jquery.flot.min.js"></script>
+	<script src="js/plugins/flot/jquery.flot.bar.order.min.js"></script>
+	<script src="js/plugins/flot/jquery.flot.pie.min.js"></script>
+	<script src="js/plugins/flot/jquery.flot.resize.min.js"></script>
+	<!-- PageGuide -->
+	<script src="js/plugins/pageguide/jquery.pageguide.js"></script>
+	<!-- Chosen -->
+	<script src="js/plugins/chosen/chosen.jquery.min.js"></script>
+	<!-- select2 -->
+	<script src="js/plugins/select2/select2.min.js"></script>
+	<!-- icheck -->
+	<script src="js/plugins/icheck/jquery.icheck.min.js"></script>
 
 	<!-- Theme framework -->
 	<script src="js/eakroko.min.js"></script>
 	<!-- Theme scripts -->
 	<script src="js/application.min.js"></script>
-
+	
 	<!--[if lte IE 9]>
 		<script src="js/plugins/placeholder/jquery.placeholder.min.js"></script>
 		<script>
@@ -63,19 +87,26 @@
 				$('input, textarea').placeholder();
 			});
 		</script>
-		<![endif]-->
-
+	<![endif]-->
+        
+        
+        
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="img/favicon.ico" />
 		<!-- Apple devices Homescreen icon -->
 		<link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-precomposed.png" />
+                <style>
+                        table th,td{
+                                text-align:center !important;
+                        }
+                </style>
 
 	</head>
 
 	<body>
 		<div id="navigation">
 			<div class="container-fluid">
-				<a href="#" id="brand">FLAT</a>
+				<a href="#" id="brand">VIRTUAL ADVISOR</a>
 				<ul class='main-nav'>
 					<li>
 						<a href="main.php">
@@ -123,7 +154,7 @@
 						</li>
 					</ul>
 					<div class="dropdown">
-					<a href="#" class='dropdown-toggle' data-toggle="dropdown"><?php session_start(); echo $_SESSION['datos']['NOMBRES']?> <img src="img/user2.png" alt=""></a>
+					<a href="#" class='dropdown-toggle' data-toggle="dropdown"><?php /*session_start();*/ echo $_SESSION['datos']['NOMBRES']?> <img src="img/user2.png" alt=""></a>
 					<ul class="dropdown-menu pull-right">
 						<li>
 							<a href="utils/funciones.php?cod=1">Cerrar Sesi&oacute;n</a>
@@ -138,7 +169,7 @@
 				<div class="container-fluid">
 					<div class="page-header">
 						<div class="pull-left">
-							<h1>Soprte a la decisi&oacute;n</h1>
+							<h1>Soporte a la decisi&oacute;n</h1>
 						</div>
 						<div class="pull-right">
 						<ul class="stats">
@@ -438,15 +469,104 @@
 					</div>
 					<div class="row-fluid">
 						<div class="span12">
-							<div class="box">
+							<div class="box box-color box-bordered">
 								<div class="box-title">
 									<h3>
 										<i class="icon-reorder"></i>
 										Resultado
 									</h3>
 								</div>
-								<div class ="box-content" id="resultado">
-									Contenido
+								<div class="box-content" style="display: block;" id="resultado">
+									
+                                                                    <table class="table table-hover table-nomargin table-bordered dataTable-columnfilter dataTable">
+                                                                        <thead>
+                                                                            <tr class='thefilter'>
+                                                                                <th>Codigo</th>
+                                                                                <th>Nombre</th>
+                                                                                <th>Paralelo</th>
+                                                                                <th>Profesor</th>
+                                                                                <th>Nota Profesor</th>
+                                                                                <th>Creditos</th>
+                                                                                <th>Tipo Credito</th>
+                                                                                <th>Indicador Dificultad</th>
+                                                                            </tr>
+<!--                                                                            <tr>
+                                                                                <th>Codigo</th>
+                                                                                <th>Nombre</th>
+                                                                                <th>Paralelo</th>
+                                                                                <th>Profesor</th>
+                                                                                <th>Nota Profesor</th>
+                                                                                <th>Creditos</th>
+                                                                                <th>Tipo Credito</th>
+                                                                                <th>Indicador Dificultad</th>
+                                                                            </tr>-->
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <?php
+                                                                                include "./utils/difficultIndicator.php";
+                                                                                include "./utils/processInfo.php";
+                                                                                include "./utils/cenacadData.php";                                                                            
+
+                                                                                /******************************************************************
+                                                                                *      LLENAR ARREGLO CON LAS MATERIAS DISPONIBLES ACTIVAS X EST. *
+                                                                                *******************************************************************/        
+                                                                                $matricula = $datos_usuario['COD_ESTUDIANTE'];
+                                                                                try {
+                                                                                    $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
+                                                                                    $client = new SOAPClient($wsdl_url);
+                                                                                    $params = array(
+                                                                                        'matricula' => "$matricula"
+                                                                                    );
+                                                                                    $return = $client->MateriasDisponiblesEstudianteActivas($params);
+                                                                                    $xml = simplexml_load_string($return->MateriasDisponiblesEstudianteActivasResult->any);
+
+                                                                                    $materiasDisponibles = array();
+
+                                                                                    foreach($xml->NewDataSet->V_MATERIAS_DISPONIBLES as $materiaDisponible){
+                                                                                        array_push($materiasDisponibles, $materiaDisponible);
+                                                                                    }
+                                                                                } catch (Exception $e) {
+                                                                                    echo "Exception occured: " . $e;
+                                                                                }
+                                                                                /*******************************************************************
+                                                                                *      LLENAR ARREGLOS DE:
+                                                                                *          - Materias por tomar, CODIGOMATERIA, ej: string 'FIEC05058      ' 
+                                                                                *          - Materias por profesor, COD_MATERIA_ACAD ej:  string 'FIEC00075 ' & IDCURSO
+                                                                                *          - Horarios de clases y examenes, IDCURSO
+                                                                                *******************************************************************/
+                                                                                try {
+                                                                                    $wsdl_url = 'https://ws.espol.edu.ec/saac/wsSAAC.asmx?wsdl';
+                                                                                    $client = new SOAPClient($wsdl_url);
+                                                                                    $params = array(
+                                                                                        'matricula' => "$matricula"
+                                                                                    );
+                                                                                    $return = $client->MateriasPorTomarEstudiante($params);
+                                                                        //            var_dump($return->MateriasPorTomarEstudianteResult);
+
+                                                                                    $xml = simplexml_load_string($return->MateriasPorTomarEstudianteResult->any);
+
+
+                                                                                    $materiasPorTomar = array();
+                                                                                    foreach ($xml->NewDataSet->V_MATERIAS_X_TOMAR as $materiaPorTomar){
+                                                                                        array_push($materiasPorTomar, $materiaPorTomar);
+                                                                                    }
+                                                                                    $materiasPorProfesor = array();
+                                                                                    foreach ($xml->NewDataSet->V_MATERIAS_X_PROFESOR as $materiaPorProfesor){
+                                                                                        array_push($materiasPorProfesor, $materiaPorProfesor);
+                                                                                    }
+                                                                                    $materiasHorarioClases = array();
+                                                                                    foreach ($xml->NewDataSet->V_HORARIO_CLASES as $materiaHorarioClases){
+                                                                                        array_push($materiasHorarioClases, $materiaHorarioClases);
+                                                                                    }
+                                                                                } catch (Exception $e) {
+                                                                                    echo "Exception occured: " . $e;
+                                                                                }
+                                                                                foreach ($materiasDisponibles as $materiaDisp){
+                                                                                    getCoursesByCodMateria($materiasPorProfesor,$materiaDisp->COD_MATERIA_ACAD, $materiaDisp);                        
+                                                                                }
+                                                                            ?>
+                                                                        </tbody>
+                                                                    </table>
 								</div>
 							</div>
 						</div>
@@ -454,7 +574,8 @@
 				</div>
 			</div>
 		</div>
-		<div id="footer">
+		
+                <div id="footer">
 			<p>
 				FLAT - Responsive Admin Template <span class="font-grey-4">|</span> <a href="#">Contact</a> <span class="font-grey-4">|</span> <a href="#">Imprint</a> 
 			</p>

@@ -99,7 +99,7 @@
 <body>
 	<div id="navigation">
 		<div class="container-fluid">
-			<a href="#" id="brand">FLAT</a>
+			<a href="#" id="brand">VIRTUAL ADVISOR</a>
 			<ul class='main-nav'>
 				<li class='active'>
 					<a href="main.php">

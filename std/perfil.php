@@ -84,7 +84,7 @@
 <body>
 	<div id="navigation">
 		<div class="container-fluid">
-			<a href="#" id="brand">FLAT</a>
+			<a href="#" id="brand">VIRTUAL ADVISOR</a>
 			<ul class='main-nav'>
 				<li>
 					<a href="main.php">
